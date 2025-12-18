@@ -1,7 +1,6 @@
 import React from "react";
 import { View, FlatList, Button, Text } from "react-native";
 import TodoItem from "../components/TodoItem";
-import { globalStyles } from "../styles/globalStyles";
 import { isOverdue, formatDate } from "../utils/dateUtils";
 
 const TodoListScreen = ({ navigation, todos, setTodos }) => {
@@ -10,8 +9,11 @@ const TodoListScreen = ({ navigation, todos, setTodos }) => {
   };
 
   return (
-    <View style={globalStyles.container}>
-      <Button title="Add Todo" onPress={() => navigation.navigate("AddTodo")} />
+    <View style={{ flex: 1, padding: 16 }}>
+      <Button
+        title="Add Task"
+        onPress={() => navigation.navigate("AddTodo")}
+      />
 
       <FlatList
         data={todos}
@@ -21,13 +23,14 @@ const TodoListScreen = ({ navigation, todos, setTodos }) => {
             item={item}
             overdue={isOverdue(item.dueDate)}
             createdAt={formatDate(item.createdAt)}
-            onEdit={() =>
-              navigation.navigate("EditTodo", { todoId: item.id })
-            }
             onDelete={() => deleteTodo(item.id)}
           />
         )}
-        ListEmptyComponent={<Text>No Todos Found</Text>}
+        ListEmptyComponent={
+          <Text style={{ textAlign: "center", marginTop: 20 }}>
+            No Tasks Found
+          </Text>
+        }
       />
     </View>
   );

@@ -1,7 +1,5 @@
-export const formatDate = (date) => {
-  return new Date(date).toDateString();
-};
+export const formatDate = (date) =>
+  new Date(date).toLocaleDateString();
 
-export const isOverdue = (dueDate) => {
-  return new Date(dueDate) < new Date();
-};
+export const isOverdue = (dueDate) =>
+  new Date(dueDate) < new Date();

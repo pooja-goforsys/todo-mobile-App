@@ -1,15 +1,22 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import TabNavigator from "./TabNavigator";
+import HomeTabs from "./HomeTabs";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
+import DashboardScreen from "../screens/DashboardScreen";
 
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigator = () => {
+const DrawerNavigator = ({ todos, setTodos }) => {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={TabNavigator} />
+    <Drawer.Navigator screenOptions={{ headerShown: false }}>
+      <Drawer.Screen name="Home">
+        {(props) => (
+          <HomeTabs {...props} todos={todos} setTodos={setTodos} />
+        )}
+      </Drawer.Screen>
+
+      <Drawer.Screen name="Dashboard" component={DashboardScreen} />
       <Drawer.Screen name="Profile" component={ProfileScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
     </Drawer.Navigator>

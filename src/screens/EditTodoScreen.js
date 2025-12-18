@@ -1,30 +1,34 @@
 import React, { useState } from "react";
 import { View, TextInput, Button } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
 
 const EditTodoScreen = ({ route, navigation, todos, setTodos }) => {
   const { todoId } = route.params;
   const todo = todos.find((t) => t.id === todoId);
 
-  const [title, setTitle] = useState(todo.title);
+  const [ticketName, setTicketName] = useState(todo.ticketName);
 
   const updateTodo = () => {
     setTodos((prev) =>
       prev.map((t) =>
-        t.id === todoId ? { ...t, title } : t
+        t.id === todoId ? { ...t, ticketName } : t
       )
     );
     navigation.goBack();
   };
 
   return (
-    <View style={globalStyles.container}>
+    <View style={{ padding: 20 }}>
       <TextInput
-        value={title}
-        onChangeText={setTitle}
-        style={globalStyles.input}
+        value={ticketName}
+        onChangeText={setTicketName}
+        style={{
+          borderWidth: 1,
+          padding: 10,
+          borderRadius: 6,
+          marginBottom: 12,
+        }}
       />
-      <Button title="Update Todo" onPress={updateTodo} />
+      <Button title="Update Task" onPress={updateTodo} />
     </View>
   );
 };
