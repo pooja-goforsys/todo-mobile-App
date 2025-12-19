@@ -1,15 +1,20 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+
 import HomeTabs from "./HomeTabs";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import DashboardScreen from "../screens/DashboardScreen";
+import CustomDrawerContent from "./CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = ({ todos, setTodos }) => {
   return (
-    <Drawer.Navigator screenOptions={{ headerShown: false }}>
+    <Drawer.Navigator
+      screenOptions={{ headerShown: false }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
       <Drawer.Screen name="Home">
         {(props) => (
           <HomeTabs {...props} todos={todos} setTodos={setTodos} />

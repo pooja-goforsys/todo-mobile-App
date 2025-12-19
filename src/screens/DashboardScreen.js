@@ -1,11 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const DashboardScreen = () => {
+const DashboardScreen = ({ todos }) => {
+  const totalTasks = todos.length;
+  const projects = new Set(todos.map((t) => t.projectName)).size;
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Dashboard</Text>
-      <Text style={styles.text}>Overview & stats will appear here</Text>
+      <Text style={styles.stat}>Projects: {projects}</Text>
+      <Text style={styles.stat}>Total Tasks: {totalTasks}</Text>
     </View>
   );
 };
@@ -13,7 +17,7 @@ const DashboardScreen = () => {
 export default DashboardScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  heading: { fontSize: 22, fontWeight: "bold" },
-  text: { color: "#666", marginTop: 8 },
+  container: { flex: 1, padding: 20 },
+  heading: { fontSize: 22, fontWeight: "bold", marginBottom: 16 },
+  stat: { fontSize: 16, marginBottom: 8 },
 });

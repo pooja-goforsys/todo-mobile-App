@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,9 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const STORAGE_KEY = "USER_PROFILE";
 
 const ProfileScreen = () => {
   const [isEditing, setIsEditing] = useState(true);
@@ -20,11 +23,27 @@ const ProfileScreen = () => {
     address: "",
   });
 
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  const loadProfile = async () => {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+      if (data) {
+        setProfile(JSON.parse(data));
+        setIsEditing(false);
+      }
+    } catch (e) {
+      console.log("Load profile error", e);
+    }
+  };
+
   const handleChange = (key, value) => {
     setProfile({ ...profile, [key]: value });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!profile.name || !profile.phone || !profile.email) {
       Alert.alert(
         "Required Fields",
@@ -32,14 +51,22 @@ const ProfileScreen = () => {
       );
       return;
     }
-    setIsEditing(false);
+
+    try {
+      await AsyncStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(profile)
+      );
+      setIsEditing(false);
+    } catch (e) {
+      Alert.alert("Error", "Failed to save profile");
+    }
   };
 
   return (
     <ScrollView
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
-      contentInsetAdjustmentBehavior="automatic"
     >
       {isEditing ? (
         <>
@@ -89,7 +116,7 @@ const ProfileScreen = () => {
         </>
       ) : (
         <>
-          <Text style={styles.title}>User Profile</Text>
+          <Text style={styles.title}>My Profile</Text>
 
           <View style={styles.card}>
             <ProfileItem label="Name" value={profile.name} />
@@ -113,14 +140,12 @@ const ProfileScreen = () => {
 
 export default ProfileScreen;
 
-
 const ProfileItem = ({ label, value }) => (
   <View style={styles.row}>
     <Text style={styles.label}>{label}</Text>
     <Text style={styles.value}>{value || "-"}</Text>
   </View>
 );
-
 
 const styles = StyleSheet.create({
   container: {

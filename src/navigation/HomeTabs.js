@@ -18,6 +18,8 @@ const HomeTabs = ({ todos, setTodos }) => {
       screenOptions={({ route }) => ({
         headerShown: false,
 
+        tabBarHideOnKeyboard: true,
+
         tabBarIcon: ({ focused }) => {
           let iconSource;
 
@@ -36,7 +38,7 @@ const HomeTabs = ({ todos, setTodos }) => {
                 width: 22,
                 height: 22,
                 resizeMode: "contain",
-                opacity: focused ? 1 : 0.5, 
+                opacity: focused ? 1 : 0.5,
               }}
             />
           );
@@ -54,8 +56,7 @@ const HomeTabs = ({ todos, setTodos }) => {
       })}
     >
       <Tab.Screen
-        name="Home"
-        children={(props) => (
+        name="Home" children={(props) => (
           <TodosStack {...props} todos={todos} setTodos={setTodos} />
         )}
       />

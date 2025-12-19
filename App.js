@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./src/navigation/DrawerNavigator";
 
-export default function App() {
+const App = () => {
   const [todos, setTodos] = useState([]);
 
   return (
@@ -10,4 +10,8 @@ export default function App() {
       <DrawerNavigator todos={todos} setTodos={setTodos} />
     </NavigationContainer>
   );
-}
+};
+
+
+
+export default App;
