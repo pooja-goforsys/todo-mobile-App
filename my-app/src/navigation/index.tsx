@@ -13,6 +13,7 @@ import { Profile } from './screens/Profile';
 import { Settings } from './screens/Settings';
 import { Updates } from './screens/Updates';
 import { NotFound } from './screens/NotFound';
+import React from 'react';
 
 const HomeTabs = createBottomTabNavigator({
   screens: {

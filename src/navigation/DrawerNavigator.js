@@ -12,18 +12,35 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = ({ todos, setTodos }) => {
   return (
     <Drawer.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: true,
+      }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Home">
         {(props) => (
-          <HomeTabs {...props} todos={todos} setTodos={setTodos} />
+          <HomeTabs
+            {...props}
+            todos={todos}
+            setTodos={setTodos}
+          />
         )}
       </Drawer.Screen>
 
-      <Drawer.Screen name="Dashboard" component={DashboardScreen} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
+      <Drawer.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+      />
+
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileScreen}
+      />
+
+      <Drawer.Screen
+        name="Settings"
+        component={SettingsScreen}
+      />
     </Drawer.Navigator>
   );
 };

@@ -7,11 +7,12 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <DrawerNavigator todos={todos} setTodos={setTodos} />
+      <DrawerNavigator
+        todos={todos}
+        setTodos={setTodos}
+      />
     </NavigationContainer>
   );
 };
-
-
 
 export default App;
