@@ -30,7 +30,6 @@ const AddTodoScreen = ({ navigation, setTodos }) => {
       createdAt: new Date().toISOString(),
     };
 
-    // ✅ THIS LINE WILL NOW WORK
     setTodos((prev) => [...prev, newTask]);
 
     navigation.goBack();
