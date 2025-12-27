@@ -9,8 +9,8 @@ import SettingsScreen from "../screens/SettingsScreen";
 const Tab = createBottomTabNavigator();
 
 const homeIcon = require("../assests/home.png");
-const userIcon = require("../assests/settings.png");
-const settingsIcon = require("../assests/user.png");
+const userIcon = require("../assests/user.png");        
+const settingsIcon = require("../assests/settings.png"); 
 
 const HomeTabs = ({ todos, setTodos }) => {
   return (

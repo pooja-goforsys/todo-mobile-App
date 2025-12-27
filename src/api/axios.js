@@ -5,32 +5,32 @@ const api = axios.create({
   timeout: 10000,
 });
 
+let globalErrorHandler = null;
+
+export const registerGlobalErrorHandler = (fn) => {
+  globalErrorHandler = fn;
+};
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    let message = "";
+
     if (!error.response) {
-      return Promise.reject({
-        userMessage: "No internet connection.",
-      });
+      message = "Server down. Please check your internet.";
+    } else if (error.response.status >= 500) {
+      message = "Internal server issue. Please try again later.";
+    } else if (error.response.status === 404) {
+      message = "Requested data not found.";
+    } else {
+      message = "Something went wrong.";
     }
 
-    const status = error.response.status;
-
-    if (status === 404) {
-      return Promise.reject({
-        userMessage: "Requested data not found.",
-      });
+    if (globalErrorHandler) {
+      globalErrorHandler(message);
     }
 
-    if (status >= 500) {
-      return Promise.reject({
-        userMessage: "Internal server error. Please try again later.",
-      });
-    }
-
-    return Promise.reject({
-      userMessage: "Something went wrong.",
-    });
+    return Promise.reject(error);
   }
 );
 

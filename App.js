@@ -1,17 +1,21 @@
-import React, { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import DrawerNavigator from "./src/navigation/DrawerNavigator";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
+import RootNavigation from "./src/navigation/RootNavigation";
+import InlineError from "./src/components/InlineError";
+import { registerGlobalErrorHandler } from "./src/api/axios";
 
 const App = () => {
-  const [todos, setTodos] = useState([]);
+  const [globalError, setGlobalError] = useState("");
+
+  useEffect(() => {
+    registerGlobalErrorHandler(setGlobalError);
+  }, []);
 
   return (
-    <NavigationContainer>
-      <DrawerNavigator
-        todos={todos}
-        setTodos={setTodos}
-      />
-    </NavigationContainer>
+    <View style={{ flex: 1 }}>
+      <InlineError message={globalError} />
+      <RootNavigation />
+    </View>
   );
 };
 

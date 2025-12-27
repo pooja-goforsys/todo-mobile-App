@@ -137,7 +137,6 @@ const TodoListScreen = ({ navigation, todos, setTodos }) => {
         }}
       />
 
-      {/* FAB */}
       <TouchableOpacity
         style={styles.fab}
         onPress={() => navigation.navigate("AddTodo")}

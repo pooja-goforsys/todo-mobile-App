@@ -1,58 +1,82 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ATTENDANCE_KEY = "TODAY_ATTENDANCE";
+// const ATTENDANCE_KEY = "ATTENDANCE_TODAY";
 
-export const getTodayAttendance = async () => {
-  const data = await AsyncStorage.getItem(ATTENDANCE_KEY);
-  return data ? JSON.parse(data) : null;
-};
+// const getTodayDate = () =>
+//   new Date().toISOString().split("T")[0];
 
-const saveAttendance = async (data) => {
-  await AsyncStorage.setItem(ATTENDANCE_KEY, JSON.stringify(data));
-};
+// export const getTodayAttendance = async () => {
+//   const data = await AsyncStorage.getItem(ATTENDANCE_KEY);
+//   if (!data) return null;
 
-export const checkIn = async () => {
-  const attendance = {
-    checkIn: new Date().toISOString(),
-    checkOut: null,
-    status: "ON_WORK",
-    breaks: [],
-  };
-  await saveAttendance(attendance);
-  return attendance;
-};
+//   const parsed = JSON.parse(data);
+//   if (parsed.date !== getTodayDate()) return null;
 
-export const startBreak = async () => {
-  const data = await getTodayAttendance();
-  if (!data || data.status !== "ON_WORK") return;
+//   return parsed;
+// };
 
-  data.status = "ON_BREAK";
-  data.breaks.push({
-    start: new Date().toISOString(),
-    end: null,
-  });
+// export const checkIn = async () => {
+//   const attendance = {
+//     date: getTodayDate(),
+//     checkIn: new Date().toISOString(),
+//     checkOut: null,
+//     breaks: [],
+//     status: "ON_WORK",
+//   };
 
-  await saveAttendance(data);
-};
+//   await AsyncStorage.setItem(
+//     ATTENDANCE_KEY,
+//     JSON.stringify(attendance)
+//   );
+//   return attendance;
+// };
 
-export const resumeWork = async () => {
-  const data = await getTodayAttendance();
-  if (!data || data.status !== "ON_BREAK") return;
+// export const startBreak = async () => {
+//   const attendance = await getTodayAttendance();
+//   if (!attendance) return null;
 
-  const lastBreak = data.breaks[data.breaks.length - 1];
-  if (lastBreak && !lastBreak.end) {
-    lastBreak.end = new Date().toISOString();
-  }
+//   attendance.breaks.push({
+//     start: new Date().toISOString(),
+//     end: null,
+//   });
 
-  data.status = "ON_WORK";
-  await saveAttendance(data);
-};
+//   attendance.status = "ON_BREAK";
+//   await AsyncStorage.setItem(
+//     ATTENDANCE_KEY,
+//     JSON.stringify(attendance)
+//   );
+//   return attendance;
+// };
 
-export const checkOut = async () => {
-  const data = await getTodayAttendance();
-  if (!data || data.checkOut) return;
+// export const endBreak = async () => {
+//   const attendance = await getTodayAttendance();
+//   if (!attendance) return null;
 
-  data.checkOut = new Date().toISOString();
-  data.status = "CHECKED_OUT";
-  await saveAttendance(data);
-};
+//   const lastBreak =
+//     attendance.breaks[attendance.breaks.length - 1];
+
+//   if (lastBreak && !lastBreak.end) {
+//     lastBreak.end = new Date().toISOString();
+//   }
+
+//   attendance.status = "ON_WORK";
+//   await AsyncStorage.setItem(
+//     ATTENDANCE_KEY,
+//     JSON.stringify(attendance)
+//   );
+//   return attendance;
+// };
+
+// export const checkOut = async () => {
+//   const attendance = await getTodayAttendance();
+//   if (!attendance) return null;
+
+//   attendance.checkOut = new Date().toISOString();
+//   attendance.status = "CHECKED_OUT";
+
+//   await AsyncStorage.setItem(
+//     ATTENDANCE_KEY,
+//     JSON.stringify(attendance)
+//   );
+//   return attendance;
+// };

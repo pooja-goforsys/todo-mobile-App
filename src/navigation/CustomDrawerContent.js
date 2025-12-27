@@ -11,7 +11,6 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const STORAGE_KEY = "USER_PROFILE";
 
 const homeIcon = require("../assests/home.png");
@@ -20,8 +19,9 @@ const settingsIcon = require("../assests/settings.png");
 
 const CustomDrawerContent = (props) => {
   const [profile, setProfile] = useState({
-    name: "",
+    fullName: "",
     email: "",
+    profileImage: null,
   });
 
   useFocusEffect(
@@ -35,12 +35,18 @@ const CustomDrawerContent = (props) => {
       const data = await AsyncStorage.getItem(STORAGE_KEY);
       if (data) {
         const parsed = JSON.parse(data);
+
         setProfile({
-          name: parsed.name || "",
+          fullName: parsed.fullName || "",
           email: parsed.email || "",
+          profileImage: parsed.profileImage || null,
         });
       } else {
-        setProfile({ name: "", email: "" });
+        setProfile({
+          fullName: "",
+          email: "",
+          profileImage: null,
+        });
       }
     } catch (error) {
       console.log("Drawer profile load error:", error);
@@ -49,19 +55,30 @@ const CustomDrawerContent = (props) => {
 
   return (
     <DrawerContentScrollView {...props}>
+      {/* 🔹 HEADER */}
       <View style={styles.header}>
-        <Image
-          source={require("../assests/user.png")}
-          style={styles.avatar}
-        />
+        {profile.profileImage ? (
+          <Image
+            source={{ uri: profile.profileImage }}
+            style={styles.avatar}
+          />
+        ) : (
+          <Image
+            source={require("../assests/user.png")}
+            style={styles.avatar}
+          />
+        )}
+
         <Text style={styles.name}>
-          {profile.name || "Guest User"}
+          {profile.fullName || "Guest User"}
         </Text>
+
         <Text style={styles.email}>
           {profile.email || "guest@email.com"}
         </Text>
       </View>
 
+      {/* 🔹 DRAWER ITEMS */}
       <DrawerItem
         label="Home"
         icon={homeIcon}
@@ -85,12 +102,16 @@ const CustomDrawerContent = (props) => {
 
 export default CustomDrawerContent;
 
+/* ================= DRAWER ITEM ================= */
+
 const DrawerItem = ({ label, icon, onPress }) => (
   <TouchableOpacity style={styles.item} onPress={onPress}>
     <Image source={icon} style={styles.icon} />
     <Text style={styles.itemText}>{label}</Text>
   </TouchableOpacity>
 );
+
+/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   header: {

@@ -186,7 +186,6 @@ const ProfileScreen = () => {
           {profile.designation || "Team Member"}
         </Text>
 
-        {/* 🔹 EMPLOYMENT SUMMARY (NOW REAL DATA) */}
         <View style={styles.productivityCard}>
           <Text style={styles.sectionTitle}>Employment Summary</Text>
 
