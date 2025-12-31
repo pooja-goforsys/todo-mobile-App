@@ -16,6 +16,7 @@ const STORAGE_KEY = "USER_PROFILE";
 const homeIcon = require("../assests/home.png");
 const userIcon = require("../assests/user.png");
 const settingsIcon = require("../assests/settings.png");
+const defaultAvatar = require("../assests/user.png");
 
 const CustomDrawerContent = (props) => {
   const [profile, setProfile] = useState({
@@ -24,50 +25,51 @@ const CustomDrawerContent = (props) => {
     profileImage: null,
   });
 
+
+  const loadProfile = async () => {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEY);
+
+      if (!data) {
+        setProfile({
+          fullName: "",
+          email: "",
+          profileImage: null,
+        });
+        return;
+      }
+
+      const parsed = JSON.parse(data);
+
+      setProfile({
+        fullName: parsed.fullName || "",
+        email: parsed.email || "",
+        profileImage: parsed.profileImage || null,
+      });
+    } catch (error) {
+      console.log("Drawer profile load error:", error);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       loadProfile();
     }, [])
   );
 
-  const loadProfile = async () => {
-    try {
-      const data = await AsyncStorage.getItem(STORAGE_KEY);
-      if (data) {
-        const parsed = JSON.parse(data);
-
-        setProfile({
-          fullName: parsed.fullName || "",
-          email: parsed.email || "",
-          profileImage: parsed.profileImage || null,
-        });
-      } else {
-        setProfile({
-          fullName: "",
-          email: "",
-          profileImage: null,
-        });
-      }
-    } catch (error) {
-      console.log("Drawer profile load error:", error);
-    }
-  };
 
   return (
     <DrawerContentScrollView {...props}>
-      {/* 🔹 HEADER */}
       <View style={styles.header}>
-        {profile.profileImage ? (
-          <Image
-            source={{ uri: profile.profileImage }}
-            style={styles.avatar}
-          />
-        ) : (
-          <Image
-            source={require("../assests/user.png")}
-            style={styles.avatar}
-          />
-        )}
+        <Image
+          source={
+            profile.profileImage
+              ? { uri: profile.profileImage }
+              : defaultAvatar
+          }
+          style={styles.avatar}
+          resizeMode="cover"
+        />
 
         <Text style={styles.name}>
           {profile.fullName || "Guest User"}
@@ -78,23 +80,31 @@ const CustomDrawerContent = (props) => {
         </Text>
       </View>
 
-      {/* 🔹 DRAWER ITEMS */}
       <DrawerItem
         label="Home"
         icon={homeIcon}
-        onPress={() => props.navigation.navigate("Home")}
+        onPress={() => {
+          props.navigation.navigate("Home");
+          props.navigation.closeDrawer();
+        }}
       />
 
       <DrawerItem
         label="Profile"
         icon={userIcon}
-        onPress={() => props.navigation.navigate("Profile")}
+        onPress={() => {
+          props.navigation.navigate("Profile");
+          props.navigation.closeDrawer();
+        }}
       />
 
       <DrawerItem
         label="Settings"
         icon={settingsIcon}
-        onPress={() => props.navigation.navigate("Settings")}
+        onPress={() => {
+          props.navigation.navigate("Settings");
+          props.navigation.closeDrawer();
+        }}
       />
     </DrawerContentScrollView>
   );
@@ -102,16 +112,14 @@ const CustomDrawerContent = (props) => {
 
 export default CustomDrawerContent;
 
-/* ================= DRAWER ITEM ================= */
 
 const DrawerItem = ({ label, icon, onPress }) => (
   <TouchableOpacity style={styles.item} onPress={onPress}>
-    <Image source={icon} style={styles.icon} />
+    <Image source={icon} style={styles.icon} resizeMode="contain" />
     <Text style={styles.itemText}>{label}</Text>
   </TouchableOpacity>
 );
 
-/* ================= STYLES ================= */
 
 const styles = StyleSheet.create({
   header: {

@@ -9,7 +9,7 @@ const RootNavigation = () => {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <DrawerNavigator />
+        <DrawerNavigator setIsLoggedIn={setIsLoggedIn} />
       ) : (
         <LoginScreen setIsLoggedIn={setIsLoggedIn} />
       )}

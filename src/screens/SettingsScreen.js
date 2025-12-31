@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,30 +8,85 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SettingsScreen = () => {
-  const [darkMode, setDarkMode] = useState(false);
+const CLEAR_KEYS = [
+  "USER_PROFILE",
+  "SAVED_TODOS",
+  "ATTENDANCE_TODAY",
+];
+
+const SETTINGS_KEY = "APP_SETTINGS";
+
+const SettingsScreen = ({ setIsLoggedIn }) => {
+  const [darkMode, setDarkMode] = useState(true);
   const [notifications, setNotifications] = useState(true);
   const [showCompleted, setShowCompleted] = useState(true);
-  const [autoDelete, setAutoDelete] = useState(false);
+  const [autoDelete, setAutoDelete] = useState(true);
   const [overdueAlert, setOverdueAlert] = useState(true);
 
-  const confirmAction = (title, message) => {
-    Alert.alert(title, message, [
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const data = await AsyncStorage.getItem(SETTINGS_KEY);
+      if (data) {
+        const s = JSON.parse(data);
+        setDarkMode(s.darkMode);
+        setNotifications(s.notifications);
+        setShowCompleted(s.showCompleted);
+        setAutoDelete(s.autoDelete);
+        setOverdueAlert(s.overdueAlert);
+      }
+    } catch (e) {
+      console.log("Failed to load settings", e);
+    }
+  };
+
+  useEffect(() => {
+    saveSettings();
+  }, [darkMode, notifications, showCompleted, autoDelete, overdueAlert]);
+
+  const saveSettings = async () => {
+    try {
+      await AsyncStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify({
+          darkMode,
+          notifications,
+          showCompleted,
+          autoDelete,
+          overdueAlert,
+        })
+      );
+    } catch (e) {
+      console.log("Failed to save settings", e);
+    }
+  };
+
+  const confirmLogout = () => {
+    Alert.alert("Logout", "Are you sure you want to logout?", [
       { text: "Cancel", style: "cancel" },
-      { text: "Confirm", style: "destructive" },
+      {
+        text: "Logout",
+        style: "destructive",
+        onPress: async () => {
+          await AsyncStorage.multiRemove([
+            ...CLEAR_KEYS,
+            SETTINGS_KEY,
+          ]);
+          setIsLoggedIn(false);
+        },
+      },
     ]);
   };
 
   return (
     <ScrollView style={styles.container}>
-
       <Section title="General">
-        <SettingRow
-          label="Dark Mode"
-          value={darkMode}
-          onChange={setDarkMode}
-        />
+        <SettingRow label="Dark Mode" value={darkMode} onChange={setDarkMode} />
         <SettingRow
           label="Notifications"
           value={notifications}
@@ -39,7 +94,6 @@ const SettingsScreen = () => {
         />
       </Section>
 
-    
       <Section title="Todo Settings">
         <SettingRow
           label="Show Completed Tasks"
@@ -58,39 +112,20 @@ const SettingsScreen = () => {
         />
       </Section>
 
-      <Section title="Data">
-        <ActionButton
-          text="Clear All Todos"
-          onPress={() =>
-            confirmAction(
-              "Clear Todos",
-              "Are you sure you want to delete all todos?"
-            )
-          }
-        />
-        <ActionButton
-          text="Reset App"
-          danger
-          onPress={() =>
-            confirmAction(
-              "Reset App",
-              "This will reset the app completely."
-            )
-          }
-        />
-      </Section>
-
       <Section title="App Info">
         <Text style={styles.infoText}>Version: 1.0.0</Text>
+
         <ActionButton
           text="Logout"
           danger
-          onPress={() => confirmAction("Logout", "Do you want to logout?")}
+          onPress={confirmLogout}
         />
       </Section>
     </ScrollView>
   );
 };
+
+export default SettingsScreen;
 
 
 const Section = ({ title, children }) => (
@@ -108,60 +143,21 @@ const SettingRow = ({ label, value, onChange }) => (
 );
 
 const ActionButton = ({ text, onPress, danger }) => (
-  <TouchableOpacity
-    style={[styles.button, danger && styles.dangerButton]}
-    onPress={onPress}
-  >
+  <TouchableOpacity onPress={onPress}>
     <Text style={[styles.buttonText, danger && styles.dangerText]}>
       {text}
     </Text>
   </TouchableOpacity>
 );
 
-export default SettingsScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#f2f2f2",
-    flex: 1,
-  },
-  section: {
-    backgroundColor: "#fff",
-    margin: 12,
-    borderRadius: 10,
-    padding: 15,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "#333",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-  },
-  label: {
-    fontSize: 14,
-    color: "#333",
-  },
-  button: {
-    paddingVertical: 12,
-  },
-  buttonText: {
-    fontSize: 14,
-    color: "#1976d2",
-    fontWeight: "600",
-  },
-  dangerButton: {},
-  dangerText: {
-    color: "#d32f2f",
-  },
-  infoText: {
-    fontSize: 13,
-    color: "#666",
-    marginBottom: 10,
-  },
+  container: { flex: 1, backgroundColor: "#f2f2f2" },
+  section: { backgroundColor: "#fff", margin: 12, padding: 15, borderRadius: 10 },
+  sectionTitle: { fontSize: 16, fontWeight: "bold", marginBottom: 10 },
+  row: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 10 },
+  label: { fontSize: 14 },
+  buttonText: { color: "#1976d2", fontWeight: "600", paddingVertical: 12 },
+  dangerText: { color: "#d32f2f" },
+  infoText: { fontSize: 13, color: "#666" },
 });

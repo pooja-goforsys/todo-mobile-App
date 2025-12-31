@@ -11,7 +11,7 @@ import CustomDrawerContent from "./CustomDrawerContent";
 const Drawer = createDrawerNavigator();
 const TODOS_KEY = "SAVED_TODOS";
 
-const DrawerNavigator = () => {
+const DrawerNavigator = ({ setIsLoggedIn }) => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
@@ -35,10 +35,7 @@ const DrawerNavigator = () => {
 
   const saveTodos = async (data) => {
     try {
-      await AsyncStorage.setItem(
-        TODOS_KEY,
-        JSON.stringify(data)
-      );
+      await AsyncStorage.setItem(TODOS_KEY, JSON.stringify(data));
     } catch (e) {
       console.log("Failed to save todos", e);
     }
@@ -47,9 +44,7 @@ const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
       screenOptions={{ headerShown: true }}
-      drawerContent={(props) => (
-        <CustomDrawerContent {...props} />
-      )}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen name="Home">
         {(props) => (
@@ -57,16 +52,14 @@ const DrawerNavigator = () => {
             {...props}
             todos={todos}
             setTodos={setTodos}
+            setIsLoggedIn={setIsLoggedIn} 
           />
         )}
       </Drawer.Screen>
 
       <Drawer.Screen name="Dashboard">
         {(props) => (
-          <DashboardScreen
-            {...props}
-            todos={todos}
-          />
+          <DashboardScreen {...props} todos={todos} />
         )}
       </Drawer.Screen>
 
@@ -75,10 +68,14 @@ const DrawerNavigator = () => {
         component={ProfileScreen}
       />
 
-      <Drawer.Screen
-        name="Settings"
-        component={SettingsScreen}
-      />
+      <Drawer.Screen name="Settings">
+        {(props) => (
+          <SettingsScreen
+            {...props}
+            setIsLoggedIn={setIsLoggedIn}
+          />
+        )}
+      </Drawer.Screen>
     </Drawer.Navigator>
   );
 };

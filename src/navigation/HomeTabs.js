@@ -9,15 +9,14 @@ import SettingsScreen from "../screens/SettingsScreen";
 const Tab = createBottomTabNavigator();
 
 const homeIcon = require("../assests/home.png");
-const userIcon = require("../assests/user.png");        
-const settingsIcon = require("../assests/settings.png"); 
+const userIcon = require("../assests/user.png");
+const settingsIcon = require("../assests/settings.png");
 
-const HomeTabs = ({ todos, setTodos }) => {
+const HomeTabs = ({ todos, setTodos, setIsLoggedIn }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-
         tabBarHideOnKeyboard: true,
 
         tabBarIcon: ({ focused }) => {
@@ -55,15 +54,29 @@ const HomeTabs = ({ todos, setTodos }) => {
         },
       })}
     >
-      <Tab.Screen
-        name="Home" children={(props) => (
-          <TodosStack {...props} todos={todos} setTodos={setTodos} />
+      {/* HOME */}
+      <Tab.Screen name="Home">
+        {(props) => (
+          <TodosStack
+            {...props}
+            todos={todos}
+            setTodos={setTodos}
+          />
         )}
-      />
+      </Tab.Screen>
 
+      {/* PROFILE */}
       <Tab.Screen name="Profile" component={ProfileScreen} />
 
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      {/* SETTINGS — LOGOUT ENABLED */}
+      <Tab.Screen name="Settings">
+        {(props) => (
+          <SettingsScreen
+            {...props}
+            setIsLoggedIn={setIsLoggedIn}
+          />
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };
