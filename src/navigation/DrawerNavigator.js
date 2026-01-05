@@ -6,6 +6,7 @@ import HomeTabs from "./HomeTabs";
 import ProfileScreen from "../screens/ProfileScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import DashboardScreen from "../screens/DashboardScreen";
+import MeetingsScreen from "../screens/MeetingsScreen"; 
 import CustomDrawerContent from "./CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
@@ -52,7 +53,7 @@ const DrawerNavigator = ({ setIsLoggedIn }) => {
             {...props}
             todos={todos}
             setTodos={setTodos}
-            setIsLoggedIn={setIsLoggedIn} 
+            setIsLoggedIn={setIsLoggedIn}
           />
         )}
       </Drawer.Screen>
@@ -62,6 +63,11 @@ const DrawerNavigator = ({ setIsLoggedIn }) => {
           <DashboardScreen {...props} todos={todos} />
         )}
       </Drawer.Screen>
+
+      <Drawer.Screen
+        name="Meetings"
+        component={MeetingsScreen}
+      />
 
       <Drawer.Screen
         name="Profile"
