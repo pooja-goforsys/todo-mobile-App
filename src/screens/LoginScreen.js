@@ -127,10 +127,12 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     marginBottom: 24,
+    fontFamily: "poppins-italic",
   },
   title: {
     fontSize: 26,
     fontWeight: "700",
+    fontFamily: "Poppins-Italic",
   },
   subtitle: {
     marginTop: 6,

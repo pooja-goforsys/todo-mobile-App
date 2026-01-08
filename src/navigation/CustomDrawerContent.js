@@ -13,10 +13,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const STORAGE_KEY = "USER_PROFILE";
 
-const homeIcon = require("../assests/home.png");
-const userIcon = require("../assests/user.png");
-const settingsIcon = require("../assests/settings.png");
-const defaultAvatar = require("../assests/user.png");
+const homeIcon = require("../assets/home.png");
+const userIcon = require("../assets/user.png");
+const settingsIcon = require("../assets/settings.png");
+const defaultAvatar = require("../assets/user.png");
 
 const CustomDrawerContent = (props) => {
   const [profile, setProfile] = useState({

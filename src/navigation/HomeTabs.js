@@ -8,9 +8,9 @@ import SettingsScreen from "../screens/SettingsScreen";
 
 const Tab = createBottomTabNavigator();
 
-const homeIcon = require("../assests/home.png");
-const userIcon = require("../assests/user.png");
-const settingsIcon = require("../assests/settings.png");
+const homeIcon = require("../assets/home.png");
+const userIcon = require("../assets/user.png");
+const settingsIcon = require("../assets/settings.png");
 
 const HomeTabs = ({ todos, setTodos, setIsLoggedIn }) => {
   return (
@@ -54,7 +54,6 @@ const HomeTabs = ({ todos, setTodos, setIsLoggedIn }) => {
         },
       })}
     >
-      {/* HOME */}
       <Tab.Screen name="Home">
         {(props) => (
           <TodosStack
@@ -65,10 +64,10 @@ const HomeTabs = ({ todos, setTodos, setIsLoggedIn }) => {
         )}
       </Tab.Screen>
 
-      {/* PROFILE */}
+
       <Tab.Screen name="Profile" component={ProfileScreen} />
 
-      {/* SETTINGS — LOGOUT ENABLED */}
+
       <Tab.Screen name="Settings">
         {(props) => (
           <SettingsScreen
